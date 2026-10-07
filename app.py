@@ -1,5 +1,6 @@
 import random
 import streamlit as st
+from logic_utils import check_guess
 
 def get_range_for_difficulty(difficulty: str):
     if difficulty == "Easy":
@@ -27,24 +28,6 @@ def parse_guess(raw: str):
         return False, None, "That is not a number."
 
     return True, value, None
-
-
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
@@ -145,14 +128,13 @@ if st.session_state.status != "playing":
     st.stop()
 
 if submit:
-    st.session_state.attempts += 1
-
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
+        st.session_state.attempts += 1
         st.session_state.history.append(guess_int)
 
         if st.session_state.attempts % 2 == 0:
