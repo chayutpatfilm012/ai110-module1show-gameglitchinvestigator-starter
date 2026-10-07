@@ -1,3 +1,4 @@
+from streamlit.testing.v1 import AppTest
 from logic_utils import check_guess
 
 def test_winning_guess():
@@ -26,3 +27,14 @@ def test_too_low_hint_says_go_higher():
     outcome, message = check_guess(40, 50)
     assert outcome == "Too Low"
     assert "HIGHER" in message
+
+def test_invalid_input_does_not_use_attempt_or_go_in_history():
+    # Bug fix: "abc" should show an error, not use an attempt, and not be added to history
+    at = AppTest.from_file("../app.py").run()
+    at.session_state.secret = 46
+    at.text_input[0].set_value("abc")
+    at.button[0].click().run()
+    assert at.error[0].value == "That is not a number."
+    assert at.session_state.attempts == 1
+    assert at.session_state.history == []
+    assert at.session_state.status == "playing"
