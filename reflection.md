@@ -98,6 +98,8 @@ At the end of the game, the Developer Debug Info showed:
 
 The history has only my 6 number guesses and no "abc". The game also kept running normally after the invalid input. This shows the invalid-input fix works in the live app.
 
+I verified the invalid input fix again in the live Streamlit app. I entered "abc" during the game and confirmed that it was rejected, did not increase the attempt count, and was not added to the guess history.
+
 AI helped me a lot with the tests. It wrote the new tests and explained why some old tests were failing. `check_guess` returns two things (the result and the message), but the old tests compared it to only one word like "Win". The AI also helped me understand the `ImportError`. But I still had to read the errors and run the tests myself to be sure.
 
 ---
